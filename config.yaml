@@ -1,0 +1,150 @@
+# This file can update the JupyterHub Helm chart's default configuration values.
+#
+# For reference see the configuration reference and default values, but make
+# sure to refer to the Helm chart version of interest to you!
+#
+# Introduction to YAML:     https://www.youtube.com/watch?v=cdLNKUoMc6c
+# Chart config reference:   https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html
+# Chart default values:     https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/HEAD/jupyterhub/values.yaml
+# Available chart versions: https://jupyterhub.github.io/helm-chart/
+#
+
+singleuser:
+  defaultUrl: "/lab"
+  extraEnv:
+    JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
+    GRANT_SUDO: "yes"
+    NOTEBOOK_ARGS: "--allow-root"
+  uid: 0
+  cmd: start-singleuser.sh
+  storage:
+    extraVolumes:
+      - name: shm-volume
+        emptyDir:
+          medium: Memory
+    extraVolumeMounts:
+      - name: shm-volume
+        mountPath: /dev/shm
+cull:
+  enabled: false
+hub:
+  config:
+    GitHubOAuthenticator:
+      client_id: 6c0a1d059a39cea43c1d
+      client_secret: ced85cabc3963bd6336a2c349ecd2204f84cd07a
+      oauth_callback_url: http://14.232.152.54:1611/hub/oauth_callback
+    JupyterHub:
+      authenticator_class: github
+    Authenticator:
+      enable_auth_state: true
+      admin_users:
+        - daovietanh190499
+        - gungui98
+  extraConfig:
+    spawner: |
+      c.KubeSpawner.default_url = "/lab"
+
+      async def custom_options_form(self):
+          auth_state = await self.user.get_auth_state()
+          self.profile_list = [
+              {
+                  'default': True,
+                  'display_name': 'Lollipop Notebook',
+                  'description': '2 cores, 8G memory, no GPU',
+                  'kubespawner_override': {
+                    'image': 'jupyter/scipy-notebook',
+                    'cpu_guarantee': 1,
+                    'cpu_limit': 2,
+                    'mem_guarantee': '4G',
+                    'mem_limit': '8G',
+                  }
+              },
+              {
+                  'display_name': 'Oreo Notebook',
+                  'description': '4 cores, 16G memory, 10G GPU, 2 ci',
+                  'kubespawner_override': {
+                    'image': 'gungui/deep-learning-cuda',
+                    'cpu_guarantee': 4,
+                    'cpu_limit': 4,
+                    'mem_guarantee': '8G',
+                    'mem_limit': '16G',
+                    'extra_resource_limits': {
+                      'nvidia.com/mig-2g.10gb': '1',
+                    },
+                  }
+              },
+              {
+                  'display_name': 'Popeye Notebook',
+                  'description': '8 cores, 16G memory, 20G GPU, 3 ci',
+                  'kubespawner_override': {
+                    'image': 'gungui/deep-learning-cuda',
+                    'cpu_guarantee': 8,
+                    'cpu_limit': 8,
+                    'mem_guarantee': '8G',
+                    'mem_limit': '16G',
+                    'extra_resource_limits': {
+                      'nvidia.com/mig-3g.20gb': '1',
+                    },
+                  }
+              },
+              {
+                  'display_name': 'Pizza Notebook',
+                  'description': '8 cores, 32G memory, 40G GPU, 7 ci',
+                  'kubespawner_override': {
+                    'image': 'gungui/deep-learning-cuda',
+                    'cpu_guarantee': 8,
+                    'cpu_limit': 8,
+                    'mem_guarantee': '8G',
+                    'mem_limit': '32G',
+                    'extra_resource_limits': {
+                      'nvidia.com/mig-7g.40gb': '1',
+                    },
+                  }
+              },
+              {
+                  'display_name': 'Supervip Notebook',
+                  'description': '16 cores, 64G memory, 80G GPU',
+                  'kubespawner_override': {
+                    'image': 'gungui/deep-learning-cuda',
+                    'cpu_guarantee': 8,
+                    'cpu_limit': 16,
+                    'mem_guarantee': '16G',
+                    'mem_limit': '64G',
+                    'extra_resource_limits': {
+                      'nvidia.com/mig-7g.40gb': '2',
+                    },
+                  }
+              }
+          ]
+
+          import requests
+          
+          username = self.user.name
+          
+          r = requests.get("https://daovietanh190499.github.io/user_role/roles.json").json()
+          
+          if username in r['super']:
+           self.profile_list = self.profile_list
+          elif username in r['advanced']:
+           self.profile_list = self.profile_list[:-1]
+          elif username in r['researcher']:
+           self.profile_list = self.profile_list[:-2]
+          elif username in r['dummy']:
+           self.profile_list = self.profile_list[:-3]
+          else:
+           self.profile_list = self.profile_list[:1]
+
+          return self._options_form_default()
+
+      c.KubeSpawner.options_form = custom_options_form
+    
+proxy:
+  https:
+    enabled: true
+    hosts:
+      - 14.232.152.54
+    letsencrypt:
+      contactEmail: daovietanh190499dev@gmail.com
+proxy:
+  service:
+    loadBalancerIP: 10.1.12.200
