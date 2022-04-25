@@ -145,6 +145,5 @@ proxy:
       - 14.232.152.54
     letsencrypt:
       contactEmail: daovietanh190499dev@gmail.com
-proxy:
   service:
     loadBalancerIP: 10.1.12.200
