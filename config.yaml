@@ -140,7 +140,7 @@ hub:
     
 proxy:
   https:
-    enabled: true
+    enabled: false
     hosts:
       - 14.232.152.54
     letsencrypt:
