@@ -32,7 +32,7 @@ hub:
     GitHubOAuthenticator:
       client_id: 6c0a1d059a39cea43c1d
       client_secret: ced85cabc3963bd6336a2c349ecd2204f84cd07a
-      oauth_callback_url: http://14.232.152.54:1611/hub/oauth_callback
+      oauth_callback_url: http://123.16.55.212:1611/hub/oauth_callback
     JupyterHub:
       authenticator_class: github
     Authenticator:
@@ -43,6 +43,7 @@ hub:
   extraConfig:
     spawner: |
       c.KubeSpawner.default_url = "/lab"
+      c.KubeSpawner.allow_privilege_escalation = True
 
       async def custom_options_form(self):
           auth_state = await self.user.get_auth_state()
@@ -97,7 +98,7 @@ hub:
                     'mem_guarantee': '8G',
                     'mem_limit': '32G',
                     'extra_resource_limits': {
-                      'nvidia.com/mig-7g.40gb': '1',
+                      'nvidia.com/gpu': '1',
                     },
                   }
               },
@@ -142,7 +143,7 @@ proxy:
   https:
     enabled: false
     hosts:
-      - 14.232.152.54
+      - 123.16.55.212
     letsencrypt:
       contactEmail: daovietanh190499dev@gmail.com
   service:
