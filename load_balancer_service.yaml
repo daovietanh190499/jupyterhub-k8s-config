@@ -7,6 +7,6 @@ spec:
     hub.jupyter.org/username: daovietanh190499
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 9376
+      port: 5000
+      targetPort: 5050
   type: LoadBalancer

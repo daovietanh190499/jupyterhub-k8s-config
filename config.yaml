@@ -64,7 +64,7 @@ hub:
                   'display_name': 'Oreo Notebook',
                   'description': '4 cores, 16G memory, 10G GPU, 2 ci',
                   'kubespawner_override': {
-                    'image': 'gungui/deep-learning-cuda',
+                    'image': 'daovietanh99/jupyter-cuda-notebook',
                     'cpu_guarantee': 4,
                     'cpu_limit': 4,
                     'mem_guarantee': '8G',
@@ -78,7 +78,7 @@ hub:
                   'display_name': 'Popeye Notebook',
                   'description': '8 cores, 16G memory, 20G GPU, 3 ci',
                   'kubespawner_override': {
-                    'image': 'gungui/deep-learning-cuda',
+                    'image': 'daovietanh99/jupyter-cuda-notebook',
                     'cpu_guarantee': 8,
                     'cpu_limit': 8,
                     'mem_guarantee': '8G',
@@ -92,7 +92,7 @@ hub:
                   'display_name': 'Pizza Notebook',
                   'description': '8 cores, 32G memory, 40G GPU, 7 ci',
                   'kubespawner_override': {
-                    'image': 'gungui/deep-learning-cuda',
+                    'image': 'daovietanh99/jupyter-cuda-notebook',
                     'cpu_guarantee': 8,
                     'cpu_limit': 8,
                     'mem_guarantee': '8G',
@@ -106,7 +106,7 @@ hub:
                   'display_name': 'Supervip Notebook',
                   'description': '16 cores, 64G memory, 80G GPU',
                   'kubespawner_override': {
-                    'image': 'gungui/deep-learning-cuda',
+                    'image': 'daovietanh99/jupyter-cuda-notebook',
                     'cpu_guarantee': 8,
                     'cpu_limit': 16,
                     'mem_guarantee': '16G',
